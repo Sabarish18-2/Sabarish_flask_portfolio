@@ -1,0 +1,71 @@
+{
+  "intents": [
+    {
+      "tag": "greeting",
+      "patterns": ["Hi", "Hello", "Hey", "Good morning"],
+      "responses": ["Hello! How can I help you?", "Hi there! Ask me anything about Sabarish."]
+    },
+    {
+      "tag": "name",
+      "patterns": ["What is your name?", "Who are you?"],
+      "responses": ["My name is Sabarish F S."]
+    },
+    {
+      "tag": "education",
+      "patterns": ["What is your education?", "Where did you study?", "College name"],
+      "responses": [
+        "I studied Robotics and Automation at Loyola Institute of Technology and Science (Anna University) from 2021 to 2025."
+      ]
+    },
+    {
+      "tag": "skills",
+      "patterns": ["What are your skills?", "Tell me your technical skills"],
+      "responses": [
+        "My skills include Arduino, AutoCAD, IoT, C++, HTML, CSS, MySQL, and Automation."
+      ]
+    },
+    {
+      "tag": "projects",
+      "patterns": ["What projects have you done?", "Tell me your projects"],
+      "responses": [
+        "I built a Bluetooth-controlled Robo Race Car with obstacle detection using ultrasonic sensors.",
+        "I also worked on an Automatic Guided Robotics System for container yard layout using IR sensors."
+      ]
+    },
+    {
+      "tag": "internship",
+      "patterns": ["Do you have internship experience?", "Internship details"],
+      "responses": [
+        "I am currently doing an internship in Robotics with Artificial Intelligence at Logiprompt Pro Academy."
+      ]
+    },
+    {
+      "tag": "career_objective",
+      "patterns": ["What is your career goal?", "Objective"],
+      "responses": [
+        "I am a motivated Robotics Engineer aiming to work in the robotics industry and contribute to innovative AI-based projects."
+      ]
+    },
+    {
+      "tag": "contact",
+      "patterns": ["How to contact you?", "Phone number", "Email"],
+      "responses": [
+        "You can contact me at 9442603694 or email me at fssabarish2@gmail.com."
+      ]
+    },
+    {
+      "tag": "location",
+      "patterns": ["Where are you from?", "Your address"],
+      "responses": [
+        "I am from Bhoothapandy."
+      ]
+    },
+    {
+      "tag": "soft_skills",
+      "patterns": ["What are your soft skills?", "Tell me soft skills"],
+      "responses": [
+        "My soft skills include Leadership, Time Management, Adaptability, Teamwork, and Interpersonal Skills."
+      ]
+    }
+  ]
+}

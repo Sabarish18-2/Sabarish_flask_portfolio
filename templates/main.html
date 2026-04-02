@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sabarish Portfolio</title>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  scroll-behavior:smooth;
+}
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  color: white;
+}
+
+/* NAVBAR */
+nav {
+  position: fixed;
+  width: 100%;
+  top: 0;
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 50px;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(10px);
+  z-index: 1000;
+}
+
+nav h1 {
+  font-size: 1.5rem;
+}
+
+nav ul {
+  display: flex;
+  gap: 30px;
+  list-style: none;
+}
+
+nav ul li a {
+  color: white;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+nav ul li a:hover {
+  color: #38bdf8;
+}
+
+/* SECTIONS */
+section {
+  min-height: 100vh;
+  padding: 100px 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+}
+
+#home h1 {
+  font-size: 3rem;
+}
+
+#home p {
+  margin-top: 20px;
+  font-size: 1.2rem;
+  color: #cbd5f5;
+}
+
+.btn {
+  margin-top: 30px;
+  padding: 12px 25px;
+  border-radius: 25px;
+  border: none;
+  background: #38bdf8;
+  color: black;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* PROJECT CARDS */
+.projects-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px,1fr));
+  gap: 20px;
+  width: 100%;
+  margin-top: 40px;
+}
+
+.card {
+  background: #1e293b;
+  padding: 20px;
+  border-radius: 15px;
+  transition: 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+}
+
+/* CHATBOT */
+#chat-window {
+  width: 320px;
+  height: 500px;
+  background: white;
+  color: black;
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+  overflow: hidden;
+}
+
+#header {
+  background: black;
+  color: white;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+
+#messages {
+  flex: 1;
+  padding: 10px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.bubble {
+  padding: 10px;
+  border-radius: 10px;
+  max-width: 80%;
+}
+
+.user {
+  background: #007bff;
+  color: white;
+  align-self: flex-end;
+}
+
+.bot {
+  background: #e9e9eb;
+  align-self: flex-start;
+}
+
+#input-area {
+  display: flex;
+  padding: 10px;
+}
+
+input {
+  flex: 1;
+  padding: 8px;
+  border-radius: 20px;
+  border: 1px solid #ccc;
+}
+
+button {
+  margin-left: 5px;
+  border-radius: 20px;
+  border: none;
+  background: #007bff;
+  color: white;
+  padding: 8px 15px;
+}
+
+.typing-indicator {
+  font-size: 0.8rem;
+  color: gray;
+}
+
+</style>
+</head>
+
+<body>
+
+<nav>
+  <h1>Sabarish</h1>
+  <ul>
+    <li><a href="{{url_for('home')}}">Home</a></li>
+    <li><a href="{{url_for('about')}}">About</a></li>
+    <li><a href="{{url_for('projects')}}">Projects</a></li>
+  </ul>
+</nav>
+
+<section id="home">
+  <h1>Hi, I'm Sabarish 👋</h1>
+  <p>AI Developer | Python Enthusiast | Building Smart Systems</p>
+  <button class="btn">Explore My Work</button>
+</section>
+
+
+
+
+
+<!-- CHATBOT (UNCHANGED FUNCTIONALITY) -->
+<div id="chat-window">
+  <div id="header">
+    <span>Assistant</span>
+    <span id="voice-toggle" onclick="toggleVoice()">🔊</span>
+  </div>
+
+  <div id="messages"></div>
+
+  <div id="input-area">
+    <input type="text" id="user-input" placeholder="Ask me...">
+    <button onclick="send()">Send</button>
+  </div>
+</div>
+
+<script>
+const msgDiv = document.getElementById('messages');
+const input = document.getElementById('user-input');
+const voiceBtn = document.getElementById('voice-toggle');
+
+let isVoiceEnabled = true;
+
+function toggleVoice() {
+  isVoiceEnabled = !isVoiceEnabled;
+
+  if (isVoiceEnabled) {
+    voiceBtn.classList.remove('muted');
+    voiceBtn.textContent = "🔊";
+  } else {
+    voiceBtn.classList.add('muted');
+    voiceBtn.textContent = "🔇";
+    window.speechSynthesis.cancel();
+  }
+}
+
+async function processBotResponse(fullText) {
+  const botDiv = document.createElement('div');
+  botDiv.className = 'bubble bot';
+  msgDiv.appendChild(botDiv);
+
+  const chunks = fullText.match(/[^\.\!\?]+[\.\!\?]+|.+/g) || [fullText];
+
+  for (let chunk of chunks) {
+
+    if (isVoiceEnabled && 'speechSynthesis' in window) {
+      const utterance = new SpeechSynthesisUtterance(chunk.trim());
+      window.speechSynthesis.speak(utterance);
+    }
+
+    for (let char of chunk) {
+      botDiv.textContent += char;
+      msgDiv.scrollTop = msgDiv.scrollHeight;
+      await new Promise(res => setTimeout(res, 20));
+    }
+  }
+}
+
+async function send() {
+  const text = input.value.trim();
+  if (!text) return;
+
+  const userDiv = document.createElement('div');
+  userDiv.className = 'bubble user';
+  userDiv.textContent = text;
+  msgDiv.appendChild(userDiv);
+
+  input.value = "";
+
+  const loader = document.createElement('div');
+  loader.className = 'typing-indicator';
+  loader.id = 'temp-loader';
+  loader.textContent = 'Thinking...';
+  msgDiv.appendChild(loader);
+
+  try {
+    const response = await fetch('/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: text })
+    });
+
+    const data = await response.json();
+
+    document.getElementById('temp-loader')?.remove();
+
+    await processBotResponse(data.response);
+
+  } catch (error) {
+    document.getElementById('temp-loader')?.remove();
+
+    const errorDiv = document.createElement('div');
+    errorDiv.className = 'bubble bot';
+    errorDiv.textContent = "Backend is down 😅";
+    msgDiv.appendChild(errorDiv);
+  }
+}
+
+input.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') send();
+});
+
+window.onload = () => {
+  const welcome = "Hi! I'm your portfolio assistant 🚀";
+  processBotResponse(welcome);
+};
+</script>
+
+</body>
+</html>
